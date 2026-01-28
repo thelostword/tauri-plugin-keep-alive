@@ -66,6 +66,9 @@ class KeepAliveService : Service() {
             ).apply {
                 description = "Keep the app alive in background"
                 setShowBadge(false)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                // 禁止用户关闭通知
+                setAllowBubbles(false)
             }
 
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -96,11 +99,18 @@ class KeepAliveService : Service() {
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(pendingIntent)
             .setOngoing(true) // 使通知不可滑动删除
+            .setAutoCancel(false) // 禁止自动取消
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
 
-        startForeground(NOTIFICATION_ID, notification)
+        // Android 10 (API 29) 及以上需要指定前台服务类型
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            startForeground(NOTIFICATION_ID, notification)
+        }
     }
 
     /**
@@ -139,9 +149,19 @@ class KeepAliveService : Service() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        // 任务被移除时重启服务
+        // 任务被移除时重启服务和应用
+        restartServiceAndApp()
+    }
+
+    /**
+     * 重启服务和应用
+     */
+    private fun restartServiceAndApp() {
+        // 1. 重启服务
         val restartServiceIntent = Intent(applicationContext, this.javaClass)
         restartServiceIntent.setPackage(packageName)
+        restartServiceIntent.putExtra("title", notificationTitle)
+        restartServiceIntent.putExtra("message", notificationMessage)
 
         val restartServicePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getService(
@@ -159,11 +179,40 @@ class KeepAliveService : Service() {
             )
         }
 
+        // 2. 重启应用
+        val restartAppIntent = packageManager.getLaunchIntentForPackage(packageName)
+        restartAppIntent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+        val restartAppPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getActivity(
+                applicationContext,
+                2,
+                restartAppIntent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getActivity(
+                applicationContext,
+                2,
+                restartAppIntent,
+                PendingIntent.FLAG_ONE_SHOT
+            )
+        }
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        // 先重启服务（1秒后）
         alarmManager.set(
             AlarmManager.RTC_WAKEUP,
             System.currentTimeMillis() + 1000,
             restartServicePendingIntent
+        )
+
+        // 再重启应用（2秒后）
+        alarmManager.set(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis() + 2000,
+            restartAppPendingIntent
         )
     }
 }

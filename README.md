@@ -1,4 +1,4 @@
-# Tauri Plugin Open Permission Settings Page
+# Tauri Plugin Keep Alive
 
 A Tauri plugin for keeping the application alive on Android by running a foreground service with a persistent notification.
 
@@ -86,8 +86,8 @@ if (!status.ignored) {
 
 if (!keepAliveRunning && status.ignored) {
   await startKeepAlive({
-    notificationTitle: 'App is running',
-    notificationMessage: 'Syncing data in the background...',
+    title: 'App is running',
+    message: 'Syncing data in the background...',
   });
 }
 // To stop the keep-alive service
