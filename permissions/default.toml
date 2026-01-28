@@ -1,0 +1,9 @@
+[default]
+description = "Default permissions for the plugin"
+permissions = [
+  "allow-start-keep-alive",
+  "allow-stop-keep-alive",
+  "allow-is-keep-alive-running",
+  "request_battery_optimization",
+  "is_battery_optimization_ignored"
+]
