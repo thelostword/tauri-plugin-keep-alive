@@ -5,6 +5,12 @@ use serde::{Deserialize, Serialize};
 pub struct StartKeepAliveRequest {
   pub title: Option<String>,
   pub message: Option<String>,
+  #[serde(default = "default_auto_restart")]
+  pub auto_restart_on_task_removed: bool,
+}
+
+fn default_auto_restart() -> bool {
+  true
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

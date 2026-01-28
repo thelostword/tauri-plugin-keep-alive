@@ -7,8 +7,8 @@ Default permissions for the plugin
 - `allow-start-keep-alive`
 - `allow-stop-keep-alive`
 - `allow-is-keep-alive-running`
-- `request_battery_optimization`
-- `is_battery_optimization_ignored`
+- `allow-request-battery-optimization`
+- `allow-is-battery-optimization-ignored`
 
 ## Permission Table
 

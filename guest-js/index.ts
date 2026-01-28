@@ -5,16 +5,19 @@ import { invoke } from '@tauri-apps/api/core'
  * @param options 可选配置项
  * @param options.title 通知标题
  * @param options.message 通知消息
+ * @param options.autoRestartOnTaskRemoved 任务移除时是否自动重启服务，默认为 true
  * @returns Promise<{success: boolean, message?: string, error?: string}>
  */
 export async function startKeepAlive(options?: {
   title?: string;
   message?: string;
+  autoRestartOnTaskRemoved?: boolean;
 }): Promise<{ success: boolean; message?: string; error?: string }> {
   return await invoke('plugin:keep-alive|start_keep_alive', {
     payload: {
       title: options?.title,
       message: options?.message,
+      autoRestartOnTaskRemoved: options?.autoRestartOnTaskRemoved ?? true,
     },
   });
 }

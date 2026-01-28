@@ -355,10 +355,10 @@
           "markdownDescription": "Denies the stop_keep_alive command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-start-keep-alive`\n- `allow-stop-keep-alive`\n- `allow-is-keep-alive-running`\n- `request_battery_optimization`\n- `is_battery_optimization_ignored`",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-start-keep-alive`\n- `allow-stop-keep-alive`\n- `allow-is-keep-alive-running`\n- `allow-request-battery-optimization`\n- `allow-is-battery-optimization-ignored`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-start-keep-alive`\n- `allow-stop-keep-alive`\n- `allow-is-keep-alive-running`\n- `request_battery_optimization`\n- `is_battery_optimization_ignored`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-start-keep-alive`\n- `allow-stop-keep-alive`\n- `allow-is-keep-alive-running`\n- `allow-request-battery-optimization`\n- `allow-is-battery-optimization-ignored`"
         }
       ]
     }

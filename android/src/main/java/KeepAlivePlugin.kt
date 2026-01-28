@@ -15,6 +15,7 @@ import app.tauri.plugin.Invoke
 class StartKeepAliveArgs {
     var title: String? = null
     var message: String? = null
+    var autoRestartOnTaskRemoved: Boolean = true
 }
 
 @TauriPlugin
@@ -32,6 +33,7 @@ class KeepAlivePlugin(private val activity: Activity): Plugin(activity) {
             // 将参数传递给 Service
             args.title?.let { intent.putExtra("title", it) }
             args.message?.let { intent.putExtra("message", it) }
+            intent.putExtra("autoRestartOnTaskRemoved", args.autoRestartOnTaskRemoved)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 activity.startForegroundService(intent)
