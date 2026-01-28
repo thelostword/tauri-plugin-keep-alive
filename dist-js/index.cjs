@@ -7,6 +7,7 @@ var core = require('@tauri-apps/api/core');
  * @param options 可选配置项
  * @param options.title 通知标题
  * @param options.message 通知消息
+ * @param options.autoRestartOnTaskRemoved 任务移除时是否自动重启服务，默认为 true
  * @returns Promise<{success: boolean, message?: string, error?: string}>
  */
 async function startKeepAlive(options) {
@@ -14,6 +15,7 @@ async function startKeepAlive(options) {
         payload: {
             title: options?.title,
             message: options?.message,
+            autoRestartOnTaskRemoved: options?.autoRestartOnTaskRemoved ?? true,
         },
     });
 }
